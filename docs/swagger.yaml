@@ -1,0 +1,350 @@
+basePath: /
+definitions:
+  model.ErrorResponse:
+    properties:
+      error:
+        type: string
+    type: object
+  model.Reservation:
+    properties:
+      checkin_expected:
+        type: string
+      checkout_expected:
+        type: string
+      guest_name:
+        type: string
+      id:
+        type: string
+      room_id:
+        type: string
+      status:
+        type: string
+      total_amount:
+        type: number
+    type: object
+  model.ReservationResponse:
+    properties:
+      checkin_expected:
+        type: string
+      checkout_expected:
+        type: string
+      guest_name:
+        type: string
+      id:
+        type: string
+      room_id:
+        type: string
+      status:
+        type: string
+      total_amount:
+        type: number
+    required:
+    - checkin_expected
+    - checkout_expected
+    - guest_name
+    - room_id
+    - status
+    - total_amount
+    type: object
+  model.Room:
+    properties:
+      capacity:
+        type: integer
+      id:
+        type: string
+      number:
+        type: integer
+      price_per_night:
+        type: number
+      status:
+        type: string
+      type:
+        type: string
+    type: object
+  model.RoomRequest:
+    properties:
+      capacity:
+        type: integer
+      id:
+        type: string
+      number:
+        type: integer
+      price_per_night:
+        type: number
+      status:
+        type: string
+      type:
+        type: string
+    required:
+    - capacity
+    - number
+    - price_per_night
+    - status
+    - type
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: API de exemplo com Gin + Swagger
+  title: ERP Hotelaria SOA API
+  version: "1.0"
+paths:
+  /reservations:
+    get:
+      description: Retorna todas as reservas cadastradas
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Reservation'
+            type: array
+        "204":
+          description: No Content
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Lista todas as reservas
+      tags:
+      - reservations
+    post:
+      consumes:
+      - application/json
+      description: Cria uma nova reserva com os dados fornecidos
+      parameters:
+      - description: Reserva
+        in: body
+        name: reservation
+        required: true
+        schema:
+          $ref: '#/definitions/model.ReservationResponse'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/model.Reservation'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Cria uma nova reserva
+      tags:
+      - reservations
+  /reservations/{id}:
+    delete:
+      description: Deleta uma reserva pelo ID
+      parameters:
+      - description: ID da Reserva (UUID)
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Deleta uma reserva
+      tags:
+      - reservations
+    get:
+      description: Retorna uma reserva pelo seu ID
+      parameters:
+      - description: ID da Reserva (UUID)
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Reservation'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Busca reserva pelo ID
+      tags:
+      - reservations
+    put:
+      consumes:
+      - application/json
+      description: Atualiza os dados de uma reserva pelo ID
+      parameters:
+      - description: ID da Reserva (UUID)
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Reserva atualizada
+        in: body
+        name: reservation
+        required: true
+        schema:
+          $ref: '#/definitions/model.ReservationResponse'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Reservation'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Atualiza uma reserva existente
+      tags:
+      - reservations
+  /rooms:
+    get:
+      description: Retorna todos os quartos cadastrados
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Room'
+            type: array
+        "204":
+          description: No Content
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Lista todos os quartos
+      tags:
+      - rooms
+    post:
+      consumes:
+      - application/json
+      description: Cria um novo quarto com os dados fornecidos
+      parameters:
+      - description: Quarto
+        in: body
+        name: room
+        required: true
+        schema:
+          $ref: '#/definitions/model.RoomRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/model.Room'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Cria um novo quarto
+      tags:
+      - rooms
+  /rooms/{id}:
+    delete:
+      description: Deleta um quarto pelo ID
+      parameters:
+      - description: ID do Quarto (UUID)
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Deleta um quarto
+      tags:
+      - rooms
+    get:
+      description: Retorna um quarto pelo seu ID
+      parameters:
+      - description: ID do Quarto (UUID)
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Room'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Busca quarto pelo ID
+      tags:
+      - rooms
+    put:
+      consumes:
+      - application/json
+      description: Atualiza os dados de um quarto pelo ID
+      parameters:
+      - description: ID do Quarto (UUID)
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Quarto atualizado
+        in: body
+        name: room
+        required: true
+        schema:
+          $ref: '#/definitions/model.RoomRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Room'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Atualiza um quarto existente
+      tags:
+      - rooms
+swagger: "2.0"
